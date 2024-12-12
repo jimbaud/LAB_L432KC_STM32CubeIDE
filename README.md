@@ -62,37 +62,6 @@ Vous pouvez télécharger ces outils depuis le site officiel de **STMicroelectro
 
 ---
 
-## 🔹 **Configuration du Timer et du DMA**
-
-La configuration du Timer et du DMA est essentielle pour assurer le bon fonctionnement du programme. Voici les éléments clés :
-
-1. **Configuration du Timer (TIM1)**
-   - **Mode de compteur** : Up (comptage ascendant).
-   - **Prescaler** : 0 (le timer utilise la fréquence du système).
-   - **Période** : 54 (pour correspondre aux timings des signaux WS2812B).
-   - **Mode PWM** : Activé sur le canal 1.
-
-   **Exemple de configuration (capture d'écran)** :
-
-   <p align="center">
-     <img src="./img/Config_pwm.png" alt="Configuration PWM" width="70%">
-   </p>
-
-2. **Configuration du DMA**
-   - **Mode** : Circulaire.
-   - **Alignement des données** : PDATAALIGN_WORD (pour la périphérie) et MDATAALIGN_BYTE (pour la mémoire).
-   - **Priorité** : Haute.
-
-   **Exemple de configuration (capture d'écran)** :
-
-   <p align="center">
-     <img src="./img/Config_dma.png" alt="Configuration DMA" width="70%">
-   </p>
-
-Ces paramètres sont cruciaux pour assurer la synchronisation correcte des données vers les LEDs.
-
----
-
 ## 🔹 **Exécution d'un exemple**
 
 1. Importez le projet dans STM32CubeIDE comme expliqué plus haut.
