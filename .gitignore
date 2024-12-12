@@ -1,0 +1,16 @@
+# Ignorer les fichiers de construction
+Debug/
+Release/
+*.o
+*.lst
+*.map
+*.dep
+
+# Ignorer les fichiers de logs
+*.log
+
+# Fichiers à inclure explicitement
+!.project
+!.cproject
+!.settings/
+!*.ioc
