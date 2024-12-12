@@ -1,182 +1,186 @@
-**# Pixel LED Driver Library**  
+# **Documentation GitHub pour la bibliothèque Pixel_LED_Driver**
 
-### 📚 **Description**
-This project provides a comprehensive **Pixel LED Driver Library** for controlling WS2812B and SK6812 addressable LEDs using an **STM32 microcontroller**. It offers multiple functions to set individual LED colors, apply global color changes, render effects like **rainbow animation**, and convert **HSL (Hue, Saturation, Luminosity) to RGB** colors. The library utilizes **PWM with DMA** to efficiently transmit the LED color data stream with minimal CPU usage.  
+## 📚 **Description**
+La **Pixel_LED_Driver** est une bibliothèque logicielle optimisée pour piloter des bandes de LEDs **WS2812B** et **SK6812** à l'aide d'un **STM32**. Cette bibliothèque utilise la **PWM avec DMA** pour envoyer des signaux haute vitesse aux LEDs, ce qui minimise la charge du processeur.  
 
-The code is modular, flexible, and easily configurable. Simply adjust the number of LEDs, the color format (RGB or RGBW), and the timer/DMA configurations in the header file.  
-
----
-
-### ✨ **Features**
-- **Support for WS2812B and SK6812** (selectable using `NUM_BPP` in the header file).  
-- **Set individual LED colors** (RGB and RGBW modes).  
-- **Set all LEDs to the same color** using a simple function.  
-- **Rainbow effect** with configurable duration, number of LEDs, and color spread.  
-- **HSL to RGB conversion** for advanced color manipulation.  
-- **Hardware-accelerated LED data transmission** using **PWM and DMA** for smooth animations.  
-- **Modular, scalable design** — add or remove LEDs easily via configuration.  
+Avec cette bibliothèque, vous pouvez :  
+- Allumer et éteindre des LEDs individuellement.  
+- Appliquer des couleurs personnalisées à chaque LED.  
+- Appliquer des couleurs globales à toutes les LEDs.  
+- Réaliser des effets visuels comme l'**effet arc-en-ciel (rainbow effect)**.  
 
 ---
 
-### 🛠️ **Hardware Requirements**
-- **STM32 Microcontroller** (tested on STM32L4).  
-- **Addressable LEDs** (WS2812B, SK6812, or compatible).  
-- **PWM-capable timer** connected to a GPIO pin.  
-- **DMA-enabled microcontroller** to reduce CPU load during color rendering.  
+## ✨ **Fonctionnalités**
+- **Prise en charge des LEDs WS2812B et SK6812** (via configuration `NUM_BPP`).  
+- **Contrôle des couleurs RGB et RGBW** (pour SK6812).  
+- **Effet arc-en-ciel paramétrable** (durée et nombre de pixels).  
+- **Conversion HSL vers RGB** pour des animations fluides.  
+- **Utilisation efficace des ressources** grâce au **DMA et PWM**.  
 
 ---
 
-### 📁 **File Structure**
+## 📦 **Structure des fichiers**
 ```
 📂 /Pixel_LED_Driver
-   ├── 📄 Pixel_LED_Driver.h      // Header file with configuration and prototypes
-   └── 📄 Pixel_LED_Driver.c      // Implementation of all functions
+   ├── 📄 Pixel_LED_Driver.h      // Fichier d'en-tête contenant les macros et prototypes
+   └── 📄 Pixel_LED_Driver.c      // Fichier source avec l'implémentation des fonctions
 ```
 
 ---
 
-### ⚙️ **Configuration**
-Before compiling, make sure to configure the following parameters in **Pixel_LED_Driver.h**:  
-- **NUM_PIXELS** — Number of LEDs on the strip.  
-- **NUM_BPP** — Number of color channels per LED (3 for WS2812B, 4 for SK6812).  
-- **Timer, DMA, and GPIO** — Configure the `TIM` and `DMA` to match your hardware.  
+## ⚙️ **Configuration de la bibliothèque (Pixel_LED_Driver.h)**
+La configuration s'effectue principalement dans le fichier **`Pixel_LED_Driver.h`**. Vous y trouverez plusieurs paramètres importants.
 
-**Example of configuration in the header file**:
+### **1️⃣ Type de LED**
+Choisissez le type de LED utilisé (WS2812B ou SK6812) :  
 ```c
-#define NUM_PIXELS         (12) // Number of LEDs
-#define NUM_BPP            (3)  // 3 for RGB (WS2812B), 4 for RGBW (SK6812)
-#define TIM_CHANNEL        TIM_CHANNEL_1
+#define LED_TYPE           LED_TYPE_WS2812B  // Ou LED_TYPE_SK6812
 ```
+- **LED_TYPE_WS2812B** — 3 canaux de couleurs (R, G, B).  
+- **LED_TYPE_SK6812** — 4 canaux de couleurs (R, G, B, W).  
 
 ---
 
-### 📘 **Function Descriptions**
-#### **1️⃣ led_set_RGB(uint8_t index, uint8_t r, uint8_t g, uint8_t b)**
-> Set the RGB color of a single LED.  
-- **Parameters**:  
-  - `index` — Index of the LED to modify (0 to NUM_PIXELS-1)  
-  - `r`, `g`, `b` — Red, Green, Blue components (0-255)  
-- **Example**:  
-  ```c
-  led_set_RGB(0, 255, 0, 0); // Set LED 0 to red
-  ```
-
-#### **2️⃣ led_set_RGBW(uint8_t index, uint8_t r, uint8_t g, uint8_t b, uint8_t w)**
-> Set the RGBW color of a single LED (for SK6812 only).  
-- **Parameters**:  
-  - `index` — Index of the LED to modify (0 to NUM_PIXELS-1)  
-  - `r`, `g`, `b`, `w` — Red, Green, Blue, and White components (0-255)  
-
-#### **3️⃣ led_set_all_RGB(uint8_t r, uint8_t g, uint8_t b)**
-> Set the same RGB color for all LEDs.  
-- **Parameters**:  
-  - `r`, `g`, `b` — Red, Green, Blue components (0-255)  
-- **Example**:  
-  ```c
-  led_set_all_RGB(0, 255, 0); // Set all LEDs to green
-  ```
-
-#### **4️⃣ led_set_all_RGBW(uint8_t r, uint8_t g, uint8_t b, uint8_t w)**
-> Set the same RGBW color for all LEDs (for SK6812 only).  
-- **Parameters**:  
-  - `r`, `g`, `b`, `w` — Red, Green, Blue, and White components (0-255)  
-
-#### **5️⃣ led_render()**
-> Transmit the LED color buffer to the LED strip using **PWM & DMA**.  
-This function must be called after setting colors to update the LEDs.  
-
-#### **6️⃣ hsl_to_rgb(uint8_t h, uint8_t s, uint8_t l)**
-> Convert **HSL (hue, saturation, lightness)** to **RGB**.  
-- **Parameters**:  
-  - `h` — Hue (0-255)  
-  - `s` — Saturation (0-255)  
-  - `l` — Lightness (0-255)  
-- **Returns**: RGB value as a 32-bit integer (0xRRGGBB).  
-
-#### **7️⃣ rainbow_effect(uint16_t duration_seconds, uint8_t num_pixels, uint8_t color_spread)**
-> Display a rainbow animation for a specified duration.  
-- **Parameters**:  
-  - `duration_seconds` — Duration of the rainbow effect in seconds.  
-  - `num_pixels` — Number of LEDs to animate.  
-  - `color_spread` — Determines the color spread between LEDs (larger values = wider color gap).  
-
-**Example usage**:
+### **2️⃣ Nombre de LEDs**
+Configurez le nombre total de LEDs dans la bande.  
 ```c
-rainbow_effect(10, 12, 15); // 10-second rainbow effect on 12 LEDs
+#define NUM_PIXELS         (12) // Nombre total de LEDs
+```
+Changez la valeur de **`NUM_PIXELS`** selon le nombre de LEDs dans votre bande LED.
+
+---
+
+### **3️⃣ Paramètres des signaux PWM**
+Le contrôle des LEDs nécessite des signaux spécifiques (PWM) pour les bits logiques **0** et **1**.  
+```c
+#define PWM_HI             (38)  // Durée du signal "1" logique
+#define PWM_LO             (19)  // Durée du signal "0" logique
+```
+Ces valeurs dépendent de la fréquence de la **PWM** et de la bande de LED utilisée.  
+
+---
+
+### **4️⃣ Paramètres de la transmission DMA**
+- **HTIM** : Nom du **Timer** utilisé.  
+- **DMA_CHANNEL** : Nom du **DMA** associé au canal PWM.  
+- **TIM_CHANNEL** : Canal utilisé sur le Timer (exemple : TIM_CHANNEL_1).  
+Ces paramètres permettent d'adapter la bibliothèque à n'importe quel timer et canal DMA de votre STM32.  
+```c
+#define HTIM                htim1
+#define DMA_CHANNEL         hdma_tim1_ch1
+#define TIM_CHANNEL         TIM_CHANNEL_1
+```
+Si vous souhaitez passer au **Timer 2**, remplacez simplement `htim1` par `htim2` et **aucun autre changement dans la bibliothèque ne sera nécessaire**.
+(pensez aussi à ajuster le cannal DMA et le cannal PWM !)
+
+---
+
+## ⚙️ **Configuration du Timer et du DMA**
+Pour que la bibliothèque fonctionne, il est nécessaire de configurer correctement le Timer et le DMA dans le fichier `tim.c`.  
+
+Voici la configuration type :  
+```c
+htim1.Instance = TIM1;
+htim1.Init.Prescaler = 0;
+htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+htim1.Init.Period = 54;
+htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+htim1.Init.RepetitionCounter = 0;
+```
+
+- **Prescaler = 0** — La fréquence du timer est égale à la fréquence d'horloge principale.  
+- **Period = 54** — Ce paramètre ajuste la fréquence de la PWM (pour correspondre aux délais du WS2812B).  
+
+**Exemple de lien DMA** :
+```c
+hdma_tim1_ch1.Instance = DMA1_Channel2;
+hdma_tim1_ch1.Init.Request = DMA_REQUEST_7;
+hdma_tim1_ch1.Init.Direction = DMA_MEMORY_TO_PERIPH;
+hdma_tim1_ch1.Init.PeriphInc = DMA_PINC_DISABLE;
+hdma_tim1_ch1.Init.MemInc = DMA_MINC_ENABLE;
+hdma_tim1_ch1.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+hdma_tim1_ch1.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+hdma_tim1_ch1.Init.Mode = DMA_CIRCULAR;
+hdma_tim1_ch1.Init.Priority = DMA_PRIORITY_HIGH;
 ```
 
 ---
 
-### 🧪 **Example Code**
-Here’s an example of how to use the library to create a rainbow effect:  
+## 🚀 **Utilisation des fonctions**
+### **1️⃣ led_set_RGB**
+> Définit la couleur d'une LED via ses composantes **Rouge, Vert, Bleu** (RVB).  
+```c
+led_set_RGB(0, 255, 0, 0); // Allume la première LED en rouge
+```
+
+### **2️⃣ led_set_all_RGB**
+> Applique la même couleur **RVB** à toutes les LEDs.  
+```c
+led_set_all_RGB(0, 255, 0); // Toutes les LEDs sont vertes
+```
+
+### **3️⃣ led_render**
+> Met à jour toutes les LEDs avec les couleurs actuelles.  
+```c
+led_render();
+```
+
+### **4️⃣ rainbow_effect**
+> Affiche un **effet arc-en-ciel** dynamique sur la bande de LEDs.  
+```c
+rainbow_effect(10, 12, 15); // Effet arc-en-ciel pendant 10s sur 12 LEDs
+```
+
+---
+
+## 🎨 **Effet Arc-en-Ciel (Rainbow)**
+L'effet **rainbow_effect()** permet d'afficher un dégradé de couleurs sur les LEDs.  
+### Paramètres :
+| **Paramètre**       | **Description**              |
+|---------------------|-----------------------------|
+| `duration_seconds`  | Durée totale de l'effet en secondes |
+| `num_pixels`        | Nombre de LEDs sur la bande  |
+| `number_color_per_led` | Décalage des couleurs sur chaque LED |
+
+**Exemple** :  
+```c
+rainbow_effect(10, 12, 10); // 10 secondes d'effet rainbow sur 12 LEDs avec 10 couleurs 
+```
+
+---
+
+## 🔧 **Exemple d'utilisation complet**
 ```c
 #include "Pixel_LED_Driver.h"
 
 int main(void) {
-    // Initialize system
     HAL_Init();
     SystemClock_Config();
     MX_TIM1_Init();
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 
-    // Initialize the LEDs
-    led_set_all_RGB(0, 0, 0); // Turn off all LEDs initially
+    // Initialisation des LEDs
+    led_set_all_RGB(0, 0, 0); // Éteint toutes les LEDs
     led_render();
 
-    // Show rainbow effect for 10 seconds on 12 LEDs
+    // Affiche l'effet arc-en-ciel
     rainbow_effect(10, 12, 15);
-    
+
     while (1) {
-        // Infinite loop (you can add custom logic here)
+        // Boucle principale
     }
 }
 ```
 
 ---
 
-### ⚠️ **Known Issues & Solutions**
-| **Issue**       | **Cause**               | **Solution**             |
-|-----------------|-----------------------|--------------------------|
-| LEDs don't light up | Incorrect timer settings | Check Timer period, prescaler, and DMA link. |
-| Only first LED lights up | Buffer misalignment | Ensure WR_BUF_LEN is calculated correctly. |
-| Colors are incorrect | Incorrect HSL to RGB | Verify the HSL conversion logic. |
+## ⚠️ **Dépannage**
+| **Problème**         | **Cause possible**            | **Solution**                   |
+|---------------------|---------------------------------|----------------------------------|
+| Les LEDs ne s'allument pas | Mauvaise configuration du timer | Vérifiez le prescaler, period et PWM |
+| Les couleurs ne sont pas correctes | Mauvaise configuration des bits PWM | Vérifiez **PWM_HI** et **PWM_LO** |
+| La première LED ne réagit pas | Buffer mal aligné | Augmentez la longueur du buffer de **+1** |
+| L'effet arc-en-ciel ne défile pas | Mauvais calcul de HSL | Vérifiez le décalage de la teinte |
 
 ---
-
-### 📦 **Dependencies**
-This project depends on the following STM32 libraries:  
-- **HAL Driver** (for DMA, PWM, and GPIO control)  
-- **HAL DMA** (for high-speed data transfer)  
-
----
-
-### 🚀 **How to Use**
-1. **Clone the repository**:  
-   ```bash
-   git clone https://github.com/username/Pixel_LED_Driver.git
-   ```
-
-2. **Import the files** into your STM32 project.  
-3. **Configure the DMA, TIM, and GPIO** for your hardware in `main.c`.  
-4. **Call the LED functions** to control your LED strip.  
-
----
-
-### 🌈 **Future Improvements**
-- Add support for other LED protocols (e.g., APA102).  
-- Enhance the HSL to RGB algorithm for more precise transitions.  
-- Add more effects (e.g., breathing, flashing).  
-
----
-
-### 🤝 **Contributions**
-We welcome contributions! If you have ideas for optimization, bug fixes, or new features, feel free to create an issue or submit a pull request.  
-
----
-
-### 📜 **License**
-This project is licensed under the **MIT License**. You are free to use, modify, and distribute it for personal or commercial use.  
-
----
-
-With this comprehensive README, you can create a well-documented GitHub repository that will make it easy for users to understand, configure, and use the **Pixel LED Driver** for STM32 microcontrollers. Let me know if you'd like any adjustments or additions! 🚀
