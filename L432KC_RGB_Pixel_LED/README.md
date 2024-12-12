@@ -77,33 +77,15 @@ Si vous souhaitez passer au **Timer 2**, remplacez simplement `htim1` par `htim2
 ---
 
 ## ⚙️ **Configuration du Timer et du DMA**
-Pour que la bibliothèque fonctionne, il est nécessaire de configurer correctement le Timer et le DMA dans le fichier `tim.c`.  
+Pour que la bibliothèque fonctionne, il est nécessaire de configurer correctement le Timer et le DMA comme illustré :  
 
-Voici la configuration type :  
-```c
-htim1.Instance = TIM1;
-htim1.Init.Prescaler = 0;
-htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-htim1.Init.Period = 54;
-htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-htim1.Init.RepetitionCounter = 0;
-```
+<p align="center">
+  <img src="./img/Config_pwm.png" alt="Configuration PWM" width="70%">
+</p>
 
-- **Prescaler = 0** — La fréquence du timer est égale à la fréquence d'horloge principale.  
-- **Period = 54** — Ce paramètre ajuste la fréquence de la PWM (pour correspondre aux délais du WS2812B).  
-
-**Exemple de lien DMA** :
-```c
-hdma_tim1_ch1.Instance = DMA1_Channel2;
-hdma_tim1_ch1.Init.Request = DMA_REQUEST_7;
-hdma_tim1_ch1.Init.Direction = DMA_MEMORY_TO_PERIPH;
-hdma_tim1_ch1.Init.PeriphInc = DMA_PINC_DISABLE;
-hdma_tim1_ch1.Init.MemInc = DMA_MINC_ENABLE;
-hdma_tim1_ch1.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
-hdma_tim1_ch1.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-hdma_tim1_ch1.Init.Mode = DMA_CIRCULAR;
-hdma_tim1_ch1.Init.Priority = DMA_PRIORITY_HIGH;
-```
+<p align="center">
+  <img src="./img/Config_dma.png" alt="Configuration DMA" width="70%">
+</p>
 
 ---
 
@@ -184,3 +166,13 @@ int main(void) {
 | L'effet arc-en-ciel ne défile pas | Mauvais calcul de HSL | Vérifiez le décalage de la teinte |
 
 ---
+
+## **Rendu**
+
+<p align="center">
+  <img src="./img/led1.jpg" alt="Configuration PWM" width="70%">
+</p>
+
+<p align="center">
+  <img src="./img/led2.jpg" alt="Configuration DMA" width="70%">
+</p>
