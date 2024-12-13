@@ -69,6 +69,6 @@ Vous pouvez télécharger ces outils depuis le site officiel de **STMicroelectro
 3. Connectez la carte Nucleo à l’ordinateur.
 4. Cliquez sur **Run** pour téléverser le programme et l’exécuter.
 
-Vous pouvez également utiliser le fichier `.bin` préséné dans le dossier `bin/`.
+Vous pouvez également utiliser le fichier `.bin` du dossier `bin/`.
 
 ---
