@@ -176,3 +176,82 @@ int main(void) {
 <p align="center">
   <img src="./img/led2.jpg" alt="Configuration DMA" width="70%">
 </p>
+
+Voici la **section "Schéma de connexion"** à intégrer dans le fichier GitHub, ainsi que des **références sur les LEDs adressables**.
+
+---
+
+## 📐 **Schéma de connexion des LEDs avec la Nucleo L432KC**
+
+Voici le schéma de câblage ASCII pour relier une bande de LEDs adressables **WS2812B** ou **SK6812** à la carte **Nucleo-32 L432KC**.
+
+```plaintext
+         ----------------------------
+        |        NUCLEO-32           |
+        |                            |
+        |     3.3V  [ ] (1)           |
+        |      5V   [ ] (2)  -->  +5V (Alimentation des LEDs)
+        |      GND  [ ] (3)  -->  GND (Alimentation des LEDs)
+        |     D9   [ ] (4)  -->  DIN (Entrée de la LED)
+        |                            |
+         ----------------------------
+
+                           ┌─────────────┐
+      +5V  ----------------┤  VDD (5V)   │
+      GND  ----------------┤  GND        │
+      D9   ----------------┤  DIN        │
+                           └─────────────┘
+                                LED 1
+                           ┌─────────────┐
+                           │  VDD (5V)   │
+                           │  GND        │
+          DOUT ------------┤  DIN        │
+                           └─────────────┘
+                                LED 2
+                           ┌─────────────┐
+                           │  VDD (5V)   │
+                           │  GND        │
+          DOUT ------------┤  DIN        │
+                           └─────────────┘
+                                ...
+```
+
+---
+
+### 🔍 **Explications des connexions**
+| **Nom**         | **Description**                          |
+|-----------------|------------------------------------------|
+| **5V**          | Alimentation des LEDs (broche Nucleo 5V) |
+| **GND**         | Masse commune (broche Nucleo GND)        |
+| **D9**          | Signal de données (broche Nucleo D9)     |
+| **VDD**         | Alimentation des LEDs (5V)               |
+| **DIN**         | Entrée de la LED (signal de commande)    |
+| **DOUT**        | Sortie de la LED (vers la LED suivante)  |
+
+---
+
+### 🛠️ **Détails techniques**
+1. **Alimentation des LEDs** :
+   - La bande de LEDs nécessite une alimentation en **5V** et **GND**.
+   - La carte **Nucleo-32 L432KC** peut fournir cette tension via sa broche **5V**.  
+   ⚠️ **Attention :** Assurez-vous que l'intensité maximale demandée par la bande de LEDs ne dépasse pas la capacité de la carte Nucleo.
+
+2. **Signal de contrôle (DIN)** :
+   - Le signal de données provient de la broche **D9** de la carte Nucleo, qui envoie des impulsions via le **PWM**.
+   - La **PWM est configurée via le Timer TIM1** et associée à la broche **PA8 (D9)**.
+
+3. **Transmission de signal** :
+   - Le signal passe de **DOUT** de la LED 1 à **DIN** de la LED 2, créant une chaîne de LEDs.
+   - Chaque LED retransmet le signal à la LED suivante.
+
+---
+
+## 🌐 **Références sur les LEDs adressables**
+- **WS2812B** : [Fiche technique WS2812B](https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf)  
+- **SK6812** : [Fiche technique SK6812](https://cdn-shop.adafruit.com/product-files/1138/SK6812.pdf)  
+- **Tutoriel sur les LEDs WS2812B** : [Guide WS2812B sur Adafruit](https://learn.adafruit.com/adafruit-neopixel-uberguide)  
+- **Explication du signal de contrôle** : [Page du signal de contrôle WS2812B](https://wp.josh.com/2014/05/13/ws2812-neopixels-are-cheaper-than-you-think/)  
+
+Ces références fournissent des explications techniques sur la manière dont les LEDs reçoivent et relaient les signaux, ainsi que sur les paramètres de timing des impulsions **PWM** nécessaires au bon fonctionnement des **WS2812B** et **SK6812**.
+
+---
