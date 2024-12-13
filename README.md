@@ -11,14 +11,14 @@ Ces projets permettent de démontrer diverses fonctionnalités de la carte, tell
 
 ```
 /
-├── projet_1/                   # Dossier contenant un projet exemple complet
+├── L432KC_projet_1/                   # Dossier contenant un projet exemple complet
 │   ├── .settings/              # Fichiers de configuration STM32CubeIDE
 │   ├── Core/                   # Code source du projet (main.c, stm32l4xx_it.c, etc.)
 │   ├── Drivers/                # Drivers HAL et CMSIS pour STM32
 │   ├── bin/                    # Fichiers binaires prêts à flasher (hex, bin, elf)
 │   └── projet_1.ioc            # Fichier de configuration CubeMX
 │
-├── projet_2/                   # Un autre projet exemple
+├── L432KC_projet_2/                   # Un autre projet exemple
 │   └── bin/                    # Fichiers binaires prêts à flasher
 │
 ├── README.md                   # Ce fichier de présentation
