@@ -1,5 +1,10 @@
 # Présentation du programme pour la carte Nucleo L432KC
 
+<div align="center">
+  <img src="./PinoutL432KC_Ljpg.jpg" alt="Pinout L432KC" width="1000"/>
+  <p><em>Pinout L432KC</em></p>
+</div>
+
 ## 🔧 **Introduction**
 Ce dépôt propose une série de projets d’exemple destinés à la carte **Nucleo L432KC**. Chaque répertoire contient un projet STM32CubeIDE complet ainsi qu'un sous-répertoire `bin/` contenant les fichiers binaires prêts à être flashés directement sur la carte.
 
